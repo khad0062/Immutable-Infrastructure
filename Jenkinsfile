@@ -32,17 +32,14 @@ pipeline {
             }
         }
 
-        stage('Terraform Init & Plan') {
-            steps {
-                dir('terraform') {
-                    sh '''
-                        terraform init
-                        terraform plan -out=tfplan
-                    '''
-                }
-            }
-        }
-
+    stage('Terraform Init & Plan') {
+  steps {
+    dir('terraform') {
+      sh 'terraform init'
+      sh 'terraform plan -out=tfplan'
+    }
+  }
+}
         stage('Terraform Apply') {
             steps {
                 dir('terraform') {
