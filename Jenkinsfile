@@ -13,9 +13,15 @@ pipeline {
             }
         }
 
+        stage('Debug - List Files') {
+            steps {
+                sh 'ls -l'
+                sh 'ls -l terraform'
+            }
+        }
+
         stage('Azure CLI Login') {
             steps {
-                // Assumes Jenkins agent has az CLI installed and user credentials available
                 sh '''
                     az login --identity || az login
                     az account set --subscription $AZURE_SUBSCRIPTION_ID
@@ -32,20 +38,19 @@ pipeline {
             }
         }
 
-       stage('Terraform Init & Plan') {
-          steps {
-          dir('terraform') {
-          sh 'terraform init'
-          sh 'terraform plan -out=tfplan'
-         }
-      }
-    }
+        stage('Terraform Init & Plan') {
+            steps {
+                dir('terraform') {
+                    sh 'terraform init'
+                    sh 'terraform plan -out=tfplan'
+                }
+            }
+        }
+
         stage('Terraform Apply') {
             steps {
                 dir('terraform') {
-                    sh '''
-                        terraform apply -auto-approve tfplan
-                    '''
+                    sh 'terraform apply -auto-approve tfplan'
                 }
             }
         }
